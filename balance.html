@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>BTC balances</title>
+<script language="JavaScript">
+var addresses =
+[
+//----------------------------------------------
+//HIER ADRESSEN EINTRAGEN:
+"128kp1raagPHPZNCj9gNgRGZ71FPp9uj2H",
+"1FfAwwL45LK3Lag2Ktzy2ASmhTfFmbsxcQ"
+//----------------------------------------------
+];
+function printBalances()
+{
+	for (var i = 0; i < addresses.length; i++)
+	{
+		var currentBalance = 
+		document.write("Balance for "
+		+ "<b>"
+		+ addresses[i].substring(0,5) //erste sechs Zeichen der Adresse fett
+		+ "</b>"
+		+ addresses[i].substr(6) + ": "		
+		+ (1e-8* parseFloat(getBalance(addresses[i])))
+		+ "<br/>");
+	}
+}
+
+function getBalance(address)
+{
+	return httpGet("http://blockchain.info/de/q/addressbalance/" + address);
+}
+
+// http://stackoverflow.com/a/4033310/536890
+function httpGet(theUrl)
+{
+	var xmlHttp = null;
+
+	xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "GET", theUrl, false );
+	xmlHttp.send( null );
+	return xmlHttp.responseText;
+}
+
+</script>
+</head>
+<body bgcolor="#000000" onload="printBalances()">
+</body>
+</html>
