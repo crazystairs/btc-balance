@@ -18,8 +18,8 @@ function printBalances()
 	{
 		var currentBalance = (1e-8* parseFloat(getBalance(addresses[i]))).toString();
 		var decimalLocation = currentBalance.indexOf(".");
-		document.write("Balance for "
-		+ "<b>"
+		document.write(
+		"<b>"
 		+ addresses[i].substring(0,addressBoldLength)
 		+ "</b>"
 		+ addresses[i].substr(addressBoldLength) + ": "
