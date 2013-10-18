@@ -30,6 +30,7 @@ var addresses =
 //-----------------------------------------------
 function printBalances()
 {
+	balances = getBalances();
 	document.write
 	(
 		"<html><head><title>BTC Balances</title></head><body bgcolor=\"#000000\" style=\"font-family: monospace; font-size:100%;\">"
@@ -37,7 +38,7 @@ function printBalances()
 	);
 	for (var i = 0; i < addresses.length; i++)
 	{
-		var currentBalance = (1e-8* parseFloat(getBalance(addresses[i]))).toString();
+		var currentBalance = balances[i];
 		var decimalLocation = currentBalance.indexOf(".");
 		document.write
 		(
@@ -55,6 +56,16 @@ function printBalances()
 	document.write("</body></html>")
 }
 
+function getBalances()
+{
+	var balances = [];
+	for (var i = 0; i < addresses.length; i++)
+	{
+		balances.push((1e-8* parseFloat(getBalance(addresses[i]))).toString());
+	}
+	return balances;
+}
+	
 function getBalance(address)
 {
 	return httpGet("http://blockchain.info/de/q/addressbalance/" + address);
@@ -73,6 +84,7 @@ function httpGet(theUrl)
 
 </script>
 </head>
-<body bgcolor="#000000" onload="printBalances()">
+<body bgcolor="#000000" onload="printBalances()"  style="font-family: monospace; font-size:100%;">
+<font color="00ff00">Getting balances from blockchain.info...</font>
 </body>
 </html>
