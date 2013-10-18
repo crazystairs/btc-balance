@@ -28,9 +28,15 @@ var addresses =
 "14cZMQk89mRYQkDEj8Rn25AnGoBi5H6uer"
 ];
 //-----------------------------------------------
+var balances = [];
+
+var maxLengthAddresses = 0;
+var maxLengthCeilBalances = 0;
+
 function printBalances()
 {
-	balances = getBalances();
+	getBalancesAndMeasureArrays();
+	padAddressesAndBalances();
 	document.write
 	(
 		"<html><head><title>BTC Balances</title></head><body bgcolor=\"#000000\" style=\"font-family: monospace; font-size:100%;\">"
@@ -38,14 +44,15 @@ function printBalances()
 	);
 	for (var i = 0; i < addresses.length; i++)
 	{
+		var currentAddress = addresses[i];
 		var currentBalance = balances[i];
-		var decimalLocation = currentBalance.indexOf(".");
+		var decimalLocation = getDecimalLocation(currentBalance);
 		document.write
 		(
 			"<b>"
-			+ addresses[i].substring(0,addressBoldLength)
+			+ currentAddress.substring(0,addressBoldLength)
 			+ "</b>"
-			+ addresses[i].substr(addressBoldLength) + ": "
+			+ currentAddress.substr(addressBoldLength) + ": "
 			+ "<b>"
 			+ currentBalance.substring(0,decimalLocation + balanceAfterDecimalBoldLength + 1)
 			+ "</b>"
@@ -56,19 +63,53 @@ function printBalances()
 	document.write("</body></html>")
 }
 
-function getBalances()
+function getBalancesAndMeasureArrays()
 {
-	var balances = [];
 	for (var i = 0; i < addresses.length; i++)
 	{
 		balances.push((1e-8* parseFloat(getBalance(addresses[i]))).toString());
+		if(addresses[i].length > maxLengthAddresses)
+		{
+			maxLengthAddresses = addresses[i].length;
+		}
+		if(getDecimalLocation(balances[i]) > maxLengthCeilBalances)
+		{
+			maxLengthCeilBalances = getDecimalLocation(balances[i]);
+		}
 	}
-	return balances;
 }
-	
+
+function padAddressesAndBalances()
+{
+	for (var i = 0; i < addresses.length; i++)
+	{
+		addresses[i] = addresses[i] + getSpaces(maxLengthAddresses - addresses[i].length);
+		balances[i] = getSpaces(maxLengthCeilBalances - getDecimalLocation(balances[i])) + balances[i];
+	}
+}
+
 function getBalance(address)
 {
 	return httpGet("http://blockchain.info/de/q/addressbalance/" + address);
+}
+
+function getSpaces(number)
+{
+	var spaces = "";
+	for(var i = 0; i < number; i++)
+	{
+		spaces += "&nbsp;";
+	}
+	return spaces;
+}
+
+function getDecimalLocation(number)
+{
+	var dl = number.indexOf(".");
+	if(dl == -1)
+		return number.length;
+	else
+		return dl;
 }
 
 // http://stackoverflow.com/a/4033310/536890
