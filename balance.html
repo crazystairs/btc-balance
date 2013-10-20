@@ -27,6 +27,31 @@ var addresses =
 "1comboyNsev2ubWRbPZpxxNhghLfonzuN" ,
 "14cZMQk89mRYQkDEj8Rn25AnGoBi5H6uer"
 ];
+// Please note:
+// This script uses blockchain.info's API function /q/addressbalance and is intended for use with cold storage addresses.
+// Transaction will be shown as soon as they hit the network, even without any confirmation.
+// Funds showing up in balance.html will not be instantly available in the wallets containing the corresponding private keys.
+// Regarding unconfirmed transactions as completed payments makes you subject to double spending attacks.
+// For more details see https://en.bitcoin.it/wiki/Double-spending
+// WARNING:
+// /q/addressbalance is only a reliable source for actually available funds when used on standalone (cold storage) addresses.
+// The displayed value is calculated by simply adding up all incoming and outgoing transactions for the given address.
+// If this address has been imported into a wallet along other funded addresses, your Bitcoin client might only partially use
+// Bitcoins from this address even though the amount to spend exactly matches the sum of its incoming transactions.
+// This happens to minimze transaction complexity and avoid fees if possible.
+// Imagine having the private keys to two addresses in your wallet which received the following transactions:
+// Address1: 5 * 0.1BTC -> 0.5BTC showing in /q/addressbalance
+// Address2: 1 * 0.3BTC -> 0.3BTC showing in /q/addressbalance
+// You just imported Address1 in order to "empty" it so you send 0.5BTC to some other address.
+// The Bitcoin client will now examine its options and go with the following output:
+// 0.3BTC from Address2 + 2*0.1BTC from Address1
+// http:/blockchain.info/q/addressbalance/Address1 will now show "30000000" Satoshi = 0.3BTC
+//
+// So in order to find out how many Bitcoins a wallet contains is only possible if all addresses it manages are known.
+// This script could be extended to also display the sum over all given addresses.
+// Feel free to send me a feature or pull request.
+// 
+// You might want to remove this text before repeatedly using the file. This will save you 2083 Bytes per call. (http://xkcd.com/688/)
 //-----------------------------------------------
 var balances = [];
 
